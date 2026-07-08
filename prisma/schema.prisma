@@ -1,0 +1,194 @@
+// Prisma schema - Convenção Baptista de Angola
+// NOTA: Este schema usa SQLite para desenvolvimento local.
+// Para produção (Vercel/PostgreSQL), use prisma/schema.production.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Configurações gerais do site (singleton - id fixo)
+model SiteSetting {
+  id                 String   @id @default("main")
+  siteTitle          String   @default("Convenção Baptista de Angola")
+  siteShortName      String   @default("C.B.A")
+  heroTitle          String   @default("Bem-vindo à Convenção Baptista de Angola")
+  heroSubtitle       String   @default("Uma comunidade de fé, amor e esperança")
+  heroImage          String   @default("https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=1600&h=500&fit=crop")
+  logoUrl            String   @default("https://media.base44.com/images/public/6a00a570762307f2d561e2c0/a3754e789_LOGOCBASEMFUNDO.png")
+  fundacao           String   @default("25 de Junho de 1940")
+  reconhecimento     String   @default("Reconhecida pelo Governo de Angola através do Decreto Executivo n.º 9, Diário da República n.º 71, de 24 de Janeiro de 1987")
+  tema               String   @default("Uma CBA Comprometida com um Ensino Metodológico, Progressivo e Multiplicador")
+  divisa             String   @default("Mateus 28.18-20")
+  endereco           String   @default("Luanda, Angola")
+  telefone           String   @default("+244 923 000 000")
+  email              String   @default("info@cba-angola.org")
+  horarioCultos      String   @default("Domingo: 9h-12h | Quarta: 18h-20h")
+  iban               String   @default("AO06.0051.0000.8338.4538.1017.7")
+  copyright          String   @default("© 2026 Convenção Baptista de Angola (C.B.A). Todos os direitos reservados.")
+  liveActive         Boolean  @default(false)
+  liveUrl            String?
+  liveTitle          String   @default("Culto em Directo")
+  // Horários detalhados dos cultos (editável)
+  cultoDomingoEBD    String   @default("9h00")
+  cultoDomingoAdoracao String @default("10h30")
+  cultoQuartaEstudo  String   @default("18h00")
+  cultoSextaOracao   String   @default("18h00")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+// Conteúdo das secções "Quem Somos" (editável pelo admin)
+model QuemSomosSection {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique // historial, declaracao-doutrinaria, pacto, baptistas, estatuto, plano-estrategico
+  label     String   // nome a mostrar
+  icon      String   // emoji
+  title     String   // título da página
+  preview   String   @db.Text // texto de pré-visualização
+  full      String?  @db.Text // texto completo (opcional)
+  downloadLabel String @default("Baixar Documento Completo")
+  documentoUrl String? // URL do documento PDF para download (opcional)
+  ordem     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Avisos urgentes (anúncios, obituários, aniversariantes, concursos, documentos, etc.)
+model UrgentNotice {
+  id        Int      @id @default(autoincrement())
+  tipo      String   @default("Anúncio") // Anúncio, Obituário, Aniversariante, Concurso Público, Documento, Urgente
+  titulo    String
+  conteudo  String
+  data      String   // data a mostrar (ex: "5 de Julho de 2026")
+  cor       String   @default("bg-red-600") // classe tailwind para a cor de fundo da etiqueta
+  imagem    String?  // URL de imagem opcional
+  link      String?  // link opcional (ex: para um documento PDF)
+  ativo     Boolean  @default(true) // se false, não aparece no site
+  ordem     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Notícias / Eventos / Comunicados
+model NewsItem {
+  id        Int      @id @default(autoincrement())
+  tipo      String   @default("Notícia") // Notícia, Evento, Seminário, Conferência, Encontro
+  cor       String   @default("bg-primary")
+  titulo    String
+  data      String
+  resumo    String
+  conteudo  String
+  imagem    String
+  videoUrl  String?  // URL do YouTube ou Vimeo (opcional)
+  ordem     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Publicações (artigos, devocionais, revista EBD)
+model Publication {
+  id        Int      @id @default(autoincrement())
+  category  String   // Devocional, Artigo, Revista EBD, Opinião, etc.
+  title     String
+  author    String?  // nome do autor (opcional)
+  excerpt   String   @db.Text // texto curto de pré-visualização
+  content   String?  // conteúdo completo (opcional, para ler ao clicar)
+  date      String
+  image     String
+  videoUrl  String?  // URL do YouTube ou Vimeo (opcional)
+  ordem     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Eventos da galeria (com fotografias)
+model Event {
+  id        Int      @id @default(autoincrement())
+  categoria String   // Conferências, Jovens, Missões, Cultos, Formação
+  titulo    String
+  data      String
+  capa      String
+  fotos     String   @default("[]") // JSON array de {url, legenda}
+  ordem     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Igrejas
+model Church {
+  id        Int      @id @default(autoincrement())
+  provincia String
+  nome      String
+  morada    String?
+  telefone  String?
+  pastor    String?
+  email     String?
+  gps       String?
+  ordem     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Departamentos / Ministérios
+model Ministry {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  image       String?
+  ordem       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Categorias de doação
+model DonationCategory {
+  id         Int      @id @default(autoincrement())
+  label      String
+  emoji      String
+  descricao  String
+  versiculo  String
+  gradient   String
+  barGrad    String
+  iconSvg    String
+  ordem      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// Mensagens recebidas pelo formulário de contacto
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  tipo      String   @default("Dúvida") // Dúvida, Pedido de Oração, Outro
+  nome      String
+  email     String
+  mensagem  String
+  lida      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// Comprovativos de doação enviados
+model DonationProof {
+  id         Int      @id @default(autoincrement())
+  categoria  String
+  metodo     String
+  nome       String
+  montante   String
+  observacao String?
+  ficheiro   String?  // nome do ficheiro (não guardamos o binário)
+  confirmado Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+// Utilizador administrador
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String   // hash simples
+  nome      String?
+  createdAt DateTime @default(now())
+}
