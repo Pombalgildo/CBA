@@ -1,0 +1,26 @@
+BACKUP DA VERSÃO ACTUAL — 08 de Julho de 2026
+=============================================
+
+Conteúdo:
+- PWA: icone personalizado para instalacao no telemovel (icon-app.png)
+- Formulario de Contactos: pedir telefone ou email (nao so email)
+- PWA: site instalavel no telemovel com icone (manifest.json)
+- Barra de navegacao inferior fixa no mobile (4 icones: Inicio, Noticias, Contactos, Igreja)
+- Menu hamburger mobile com icones SVG brancos + texto
+- Novo logo CBA em todo o site
+- Página Online com chat do YouTube incorporado
+- Aba Contactos no admin: horário de funcionamento do escritório
+- Quem Somos: "Visão e Valores" antes do Historial
+- Aba Doações no admin: IBAN + dados de pagamento + categorias
+- Painel admin com menu no topo (7 itens + 6 itens)
+- Notícias com texto justificado e cabeçalho alinhado à esquerda
+- Publicações com autor, resumo, conteúdo completo e cartão do autor
+- Departamentos com cards elegantes (ícones, hover, previews curtos)
+- Avisos Urgentes com suporte a imagens
+- 52 igrejas registadas
+- Botão flutuante de Live leva à página Online
+- Navbar com "Encontre Uma Igreja" em 2 linhas + "Doe Agora" amarelo
+- Upload de imagens e PDFs funcional
+- Supabase Storage configurado
+
+Login admin: admin / cba2026Gpombal
